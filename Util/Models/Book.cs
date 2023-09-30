@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Util.Models
 {
-    public class Book
+    public class Book : DbDocument
     {
 
         public string Title { get; set; }

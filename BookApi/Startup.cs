@@ -1,3 +1,5 @@
+using BookApi.Repositories;
+using BookApi.Services;
 using BookApi.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Util.Models;
 
 namespace BookApi
 {
@@ -26,8 +29,13 @@ namespace BookApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
             services.Configure<DbSettings>(Configuration.GetSection("DbSettings"));
+            services.Configure<SyncServiceSettings>(Configuration.GetSection("SyncServiceSettings"));
             services.AddSingleton<IDbSettings>(provider => provider.GetRequiredService<IOptions<DbSettings>>().Value);
+            services.AddSingleton<ISyncServiceSettings>(provider => provider.GetRequiredService<IOptions<SyncServiceSettings>>().Value);
+            services.AddScoped<IDbRepository<Book>, DbRepository<Book>>();
+            services.AddScoped<ISyncService<Book>, SyncService<Book>>();
             services.AddControllers();
         }
 

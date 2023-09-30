@@ -22,7 +22,7 @@ namespace BookApi.Repositories
         }
         public void DeleteRecord(Guid id)
         {
-            
+            _collection.DeleteOne(doc => doc.Id == id);
         }
 
         public List<T> GetAllRecords()
@@ -33,17 +33,20 @@ namespace BookApi.Repositories
 
         public T GetRecordById(Guid id)
         {
-            throw new NotImplementedException();
+            return _collection.Find(doc => doc.Id == id).FirstOrDefault();
         }
 
         public T InsertRecord(T record)
         {
-            throw new NotImplementedException();
+            _collection.InsertOne(record);
+
+            return record;
         }
 
         public void UpsertRecord(T record)
         {
-            throw new NotImplementedException();
+            _collection.ReplaceOne(doc => doc.Id == record.Id, record, 
+                new ReplaceOptions() { IsUpsert = true});
         }
     }
 }
